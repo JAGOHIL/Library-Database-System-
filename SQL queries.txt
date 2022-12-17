@@ -1,0 +1,70 @@
+USE library;
+CREATE TABLE books (
+ISBN VARCHAR(200) NOT NULL,
+title VARCHAR(100) NOT NULL,
+author VARCHAR(300) NOT NULL,
+PRIMARY KEY (ISBN),
+stock INT NOT NULL
+);
+INSERT INTO books VALUE("067162248X","People Skills","Robert Bolton",3);
+INSERT INTO books VALUE("0393937054","We the People","Ginsberg Benjamin",5);
+INSERT INTO books VALUE("1683750616","2018 Dream Cars","TF Publishing",2);
+INSERT INTO books VALUE("0814332463","The Dodge Brothers","Dr Charles K",6);
+INSERT INTO books VALUE("0966862309","How Cars Work","Tom Newton",4);
+INSERT INTO books VALUE("0073402133","Computers in the Medical Office","Susan Sanderson",1);
+INSERT INTO books VALUE("1305391853","Discovering Computers 2016","Steven K",7);
+INSERT INTO books VALUE("0132839962","Practical Computing","Hogan Lyn",9);
+INSERT INTO books VALUE("1284030261","Introduction to Computers for Healthcare Professionals","Marjorie J",2);
+INSERT INTO books VALUE("0321884914","Learn Python the Hard Way","Shaw Zed",20);
+
+CREATE TABLE users(
+user_id INT,
+first_name VARCHAR(300) NOT NULL,
+last_name VARCHAR(300) NOT NULL,
+contact_number BIGINT NOT NULL,
+address_1 VARCHAR(100) NOT NULL,
+address_2 VARCHAR(100) NOT NULL,
+country VARCHAR (60) NOT NULL,
+postalcode VARCHAR (30) NOT NULL,
+PRIMARY KEY(user_id)
+);
+INSERT INTO users VALUES(1,"Jack","Gohil",07307383851,"39 Grove Road Eastbourne","East Sussex","United Kingdom","BN21 4TX");
+INSERT INTO users VALUES(2,"Donald","Trump",12029182132,"21 3rd Dr Centereach","East Sussex","United Kingdom","BN21 4TX");
+INSERT INTO users VALUES(3,"Tony","Ingram",1423928175,"21 3rd Dr Centereach","New York","United States","11720");
+INSERT INTO users VALUES(4,"Sean","Martinez",013122200859,"88 Wakehurst St","Buffalo Grove","United States","IL60089");
+INSERT INTO users VALUES(5,"Deanna","Jackson",1405843050,"36 Main Road","Paisley","United Kingdom","PA96 6QM");
+INSERT INTO users VALUES(6,"David","Ross",1505644062,"71 Grange Road","Galashiels","United Kingdom","TD29 8PY");
+INSERT INTO users VALUES(7,"Brittany","Thomas",14407317988,"38 Victoria Road","East Central London","United Kingdom","EC33 8HA");
+INSERT INTO users VALUES(8,"John","Marshall",12147516148,"19 Queens Road","Wakefield","United Kingdom","WF53 7AS");
+INSERT INTO users VALUES(9,"Patrica","Farrell",15823330483,"9 Manor Road","Croydon","United Kingdom","CR12 4HW");
+INSERT INTO users VALUES(10,"Laura","Turner",12287049658,"11 Highfield Road","Nottingham","United Kingdom","NG10 3GM");
+
+CREATE TABLE loaned(
+user_id INT,
+ISBN VARCHAR(70),
+date_lent DATE,
+date_due DATE,
+FOREIGN KEY(user_id) REFERENCES users(user_id),
+FOREIGN KEY(ISBN) REFERENCES books(ISBN)
+);
+
+INSERT INTO loaned VALUES(1,"0393937054",'2022-07-14','2022-07-18');
+INSERT INTO loaned VALUES(2,"0073402133",'2022-07-11','2022-07-15');
+INSERT INTO loaned VALUES(3,"1284030261",'2022-07-10','2022-07-16');
+INSERT INTO loaned VALUES(4,"0966862309",'2022-07-10','2022-07-09');
+INSERT INTO loaned VALUES(5,"0393937054",'2022-07-16','2022-07-19');
+INSERT INTO loaned VALUES(6,"0073402133",'2022-07-01','2022-07-10');
+INSERT INTO loaned VALUES(7,"0966862309",'2022-07-16','2022-07-20');
+INSERT INTO loaned VALUES(8,"0132839962",'2022-07-01','2022-07-10');
+INSERT INTO loaned VALUES(9,"0321884914",'2022-07-13','2022-07-17');
+INSERT INTO loaned VALUES(10,"0321884914",'2022-07-14','2022-07-18');
+
+COMMIT;
+
+SELECT * FROM users;
+SELECT * FROM books;
+SELECT l.user_id,u.first_name,u.last_name FROM loaned l JOIN users u ON l.user_id=u.user_id;
+SELECT l.ISBN,b.title,b.author FROM loaned l JOIN books b on l.ISBN=b.ISBN;
+SELECT l.user_id,u.first_name,u.last_name,l.ISBN,b.title,b.author FROM loaned l JOIN users u ON l.user_id=u.user_id JOIN books b ON b.ISBN=l.ISBN where date_due<CURDATE();
+
+COMMIT;
